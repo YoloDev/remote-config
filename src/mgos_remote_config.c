@@ -17,6 +17,9 @@
 
 #include "mgos_remote_config.h"
 #include "common/cs_dbg.h"
+#include "mgos_utils.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct mgos_remote_data_node {
@@ -107,6 +110,9 @@ void mgos_remote_config_json_walk(void *callback_data, const char *name,
       }
       break;
     }
+
+    default:
+      break;
   }
 }
 
