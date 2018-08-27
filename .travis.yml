@@ -1,5 +1,9 @@
-sudo: false
 language: c
+sudo: required
+
+services:
+  - docker
+
 env:
   - PLATFORM=esp8266
   - PLATFORM=esp32
