@@ -142,6 +142,7 @@ void mgos_remote_config_update_full(int ev, void *ev_data, void *userdata) {
   json_walk(json_string->p, json_string->len, mgos_remote_config_json_walk,
             walk_data);
   free(walk_data);
+  mgos_event_trigger(MGOS_REMOTE_CONFIG_READY, NULL);
 
   (void)ev;
   (void)userdata;
