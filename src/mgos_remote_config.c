@@ -89,7 +89,8 @@ void mgos_remote_config_json_walk(void *callback_data, const char *name,
 
       for (int i = 0; i < _data.len; i++) {
         if (strcmp(path, _data.nodes[i].path) == 0) {
-          bool wasUpdated = _data.nodes[i].update(_data.nodes[i].data, token);
+          bool wasUpdated =
+              _data.nodes[i].update(_data.nodes[i].data, token, path);
           if (wasUpdated && data->trigger_events) {
             data->ev.path = path;
             data->ev.value = _data.nodes[i].data;

@@ -15,7 +15,8 @@ extern "C" {
 
 #define MGOS_REMOTE_CONFIG_BASE MGOS_EVENT_BASE('R', 'C', 'F')
 
-typedef bool (*mgos_data_update)(void *data, const struct json_token *token);
+typedef bool (*mgos_data_update)(void *data, const struct json_token *token,
+                                 const char *path);
 
 /* In the comment, the type of `void *ev_data` is specified */
 enum mgos_remote_config_event {
@@ -50,11 +51,13 @@ struct mgos_remote_config_prop {
 void mgos_remote_config_register(struct mgos_remote_config_prop *props,
                                  size_t len);
 
+// Data types
 struct mgos_remote_config_data mgos_remote_config_data_bool(bool defaultValue);
 struct mgos_remote_config_data
 mgos_remote_config_data_string(const char *defaultValue);
 struct mgos_remote_config_data mgos_remote_config_data_int(int defaultValue);
 
+// Init
 bool mgos_remote_config_init(void);
 
 #ifdef __cplusplus
