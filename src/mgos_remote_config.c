@@ -17,6 +17,8 @@
 
 #include "mgos_remote_config.h"
 #include "common/cs_dbg.h"
+#include "mgos_sys_config.h"
+#include "mgos_system.h"
 #include "mgos_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,13 +60,17 @@ void mgos_remote_config_register(struct mgos_remote_config_prop *props,
            sizeof(struct mgos_remote_data_node) * _data.len);
   }
 
-  for (int i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     struct mgos_remote_config_prop *prop = props + i;
     struct mgos_remote_data_node node;
     node.path = prop->path;
     node.data = prop->data.data;
     node.update = prop->data.update;
     new_nodes[_data.len + i] = node;
+  }
+
+  if (_data.nodes != NULL) {
+    free(_data.nodes);
   }
 
   _data.nodes = new_nodes;
@@ -114,6 +120,9 @@ void mgos_remote_config_json_walk(void *callback_data, const char *name,
     default:
       break;
   }
+
+  (void)name;
+  (void)name_len;
 }
 
 void mgos_remote_config_save(struct mg_str *json_string) {
@@ -136,6 +145,8 @@ void mgos_remote_config_update_full(int ev, void *ev_data, void *userdata) {
   json_walk(json_string->p, json_string->len, mgos_remote_config_json_walk,
             walk_data);
   free(walk_data);
+
+  (void)ev;
   (void)userdata;
 }
 
