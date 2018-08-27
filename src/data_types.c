@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+static const void *get_bool(void *store) { return store; }
+
 static bool update_bool(void *store, const struct json_token *token,
                         const char *path) {
   bool *data = (bool *)store;
@@ -46,15 +48,21 @@ struct mut_str {
 static struct mut_str mut_strdup(const struct mg_str s) {
   struct mut_str r = {NULL, {NULL, 0}};
   if (s.len > 0 && s.p != NULL) {
-    char *sc = (char *)MG_MALLOC(s.len);
+    char *sc = (char *)MG_MALLOC(s.len + 1);
     if (sc != NULL) {
       memcpy(sc, s.p, s.len);
+      sc[s.len] = '\0';
       r.p = sc;
       r.str.p = sc;
       r.str.len = s.len;
     }
   }
   return r;
+}
+
+static const void *get_string(void *store) {
+  struct mut_str *data = (struct mut_str *)store;
+  return &data->str;
 }
 
 static bool update_string(void *store, const struct json_token *token,
@@ -82,6 +90,8 @@ static bool update_string(void *store, const struct json_token *token,
   }
 }
 
+static const void *get_int(void *store) { return store; }
+
 static bool update_int(void *store, const struct json_token *token,
                        const char *path) {
   int *data = (int *)store;
@@ -107,7 +117,8 @@ static bool update_int(void *store, const struct json_token *token,
 struct mgos_remote_config_data mgos_remote_config_data_bool(bool defaultValue) {
   bool *data = malloc(sizeof(bool));
   *data = defaultValue;
-  struct mgos_remote_config_data ret = {.data = data, .update = update_bool};
+  struct mgos_remote_config_data ret = {
+      .data = data, .update = update_bool, .get = get_bool};
   return ret;
 }
 
@@ -115,13 +126,15 @@ struct mgos_remote_config_data
 mgos_remote_config_data_string(const char *defaultValue) {
   struct mut_str *data = malloc(sizeof(struct mut_str));
   *data = mut_strdup(mg_mk_str(defaultValue));
-  struct mgos_remote_config_data ret = {.data = data, .update = update_string};
+  struct mgos_remote_config_data ret = {
+      .data = data, .update = update_string, .get = get_string};
   return ret;
 }
 
 struct mgos_remote_config_data mgos_remote_config_data_int(int defaultValue) {
   int *data = malloc(sizeof(int));
   *data = defaultValue;
-  struct mgos_remote_config_data ret = {.data = data, .update = update_int};
+  struct mgos_remote_config_data ret = {
+      .data = data, .update = update_int, .get = get_int};
   return ret;
 }

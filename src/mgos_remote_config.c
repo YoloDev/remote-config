@@ -11,6 +11,7 @@ struct mgos_remote_data_node {
   void *data;
   const char *path;
   mgos_data_update update;
+  mgos_data_get get;
 };
 
 struct mgos_remote_data {
@@ -49,6 +50,7 @@ void mgos_remote_config_register(struct mgos_remote_config_prop *props,
     node.path = prop->path;
     node.data = prop->data.data;
     node.update = prop->data.update;
+    node.get = prop->data.get;
     new_nodes[_data.len + i] = node;
   }
 
@@ -59,6 +61,17 @@ void mgos_remote_config_register(struct mgos_remote_config_prop *props,
   _data.nodes = new_nodes;
   _data.len += len;
   mgos_runlock(_data.lock);
+}
+
+const void *mgos_remote_config_get(const char *path) {
+  for (int i = 0; i < _data.len; i++) {
+    if (strcmp(path, _data.nodes[i].path) == 0) {
+      return _data.nodes[i].get(_data.nodes[i].data);
+    }
+  }
+
+  LOG(LL_WARN, ("Requested remote config %s, but it does not exist", path));
+  return NULL;
 }
 
 struct mgos_remote_config_walk_data {

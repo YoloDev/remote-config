@@ -17,6 +17,7 @@ extern "C" {
 
 typedef bool (*mgos_data_update)(void *data, const struct json_token *token,
                                  const char *path);
+typedef const void *(*mgos_data_get)(void *data);
 
 /* In the comment, the type of `void *ev_data` is specified */
 enum mgos_remote_config_event {
@@ -41,6 +42,7 @@ struct mgos_remote_config_update_raw {
 struct mgos_remote_config_data {
   void *data;
   mgos_data_update update;
+  mgos_data_get get;
 };
 
 struct mgos_remote_config_prop {
@@ -50,6 +52,7 @@ struct mgos_remote_config_prop {
 
 void mgos_remote_config_register(struct mgos_remote_config_prop *props,
                                  size_t len);
+const void *mgos_remote_config_get(const char *path);
 
 // Data types
 struct mgos_remote_config_data mgos_remote_config_data_bool(bool defaultValue);
