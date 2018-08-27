@@ -25,6 +25,7 @@ enum mgos_remote_config_event {
       MGOS_REMOTE_CONFIG_BASE,   /* struct mg_str - remote config */
   MGOS_REMOTE_CONFIG_UPDATE_RAW, /* struct mgos_remote_config_update_raw */
   MGOS_REMOTE_CONFIG_UPDATE,     /* struct mgos_remote_config_update */
+  MGOS_REMOTE_CONFIG_READY,
 };
 
 /* ev_data for MGOS_REMOTE_CONFIG_UPDATE event. */
