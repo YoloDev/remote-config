@@ -9,6 +9,7 @@ env:
   - PLATFORM=esp32
   - PLATFORM=cc3200
   - PLATFORM=cc3220
+  - PLATFORM=stm32
 
 install: curl -fsSL https://mongoose-os.com/downloads/mos/install.sh | /bin/bash
 script: ~/.mos/bin/mos build --local --verbose --platform $PLATFORM
