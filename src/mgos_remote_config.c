@@ -150,7 +150,7 @@ void mgos_remote_config_update_full(int ev, void *ev_data, void *userdata) {
 }
 
 void mgos_remote_config_init_done(int ev, void *ev_data, void *userdata) {
-  const char *json_string = json_fread("remote_config.json");
+  char *json_string = json_fread("remote_config.json");
   if (json_string) {
     struct mgos_remote_config_walk_data *walk_data = malloc(sizeof(*walk_data));
     walk_data->trigger_events = false;
