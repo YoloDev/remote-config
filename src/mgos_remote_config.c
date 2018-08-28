@@ -33,6 +33,7 @@ void mgos_remote_config_register(struct mgos_remote_config_prop *props,
   if (_data.inited) {
     LOG(LL_WARN,
         ("mgos_remote_config_register called after init, will be ignored"));
+    return;
   }
 
   mgos_rlock(_data.lock);
